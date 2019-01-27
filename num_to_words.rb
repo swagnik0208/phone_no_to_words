@@ -70,7 +70,7 @@ class NumToWords
           final_array.delete(f) if matching_words["10"].include?(f.join(""))
         end
       end
-      final_array = final_array.sort
+      final_array = final_array.uniq.sort
       matching_words["10"].sort.map{|m| final_array.push(m)}
     end
     return final_array
