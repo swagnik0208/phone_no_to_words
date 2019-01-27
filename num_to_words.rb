@@ -19,41 +19,43 @@ class NumToWords
 		matching_words=Hash.new
 		final_array = Array.new
     num_a = num.split("")
-    @all_words.keys.each do |k|
-      matching_words[k] = return_matching_words(num_a[0..(k.to_i - 1)])
-    end
-    matching_words.each_pair do|m,n|
-      unless n.empty?
-        remaining_length = 10 - m.to_i
-        if remaining_length >= 3
-          comp_words = return_matching_words(num_a[(m.to_i)..9])
-          unless comp_words.empty?
-            n.each do|f_w|
-              comp_words.map{|c| final_array.push([f_w,c])}
-            end
-          end
-          if detailed == true
-            if remaining_length == 6
-              s_comp_words = return_matching_words(num_a[4..6])
-              unless s_comp_words.empty?
-                t_comp_words = return_matching_words(num_a[7..9])
-                unless t_comp_words.empty?
-                  n.each do|f_w|
-                    s_comp_words.each do|s|
-                      t_comp_words.map{|t| final_array.push([f_w,s,t]) }
-                    end
-                  end
-                end
+    if num_a & ["0","1"] == []
+      @all_words.keys.each do |k|
+        matching_words[k] = return_matching_words(num_a[0..(k.to_i - 1)])
+      end
+      matching_words.each_pair do|m,n|
+        unless n.empty?
+          remaining_length = 10 - m.to_i
+          if remaining_length >= 3
+            comp_words = return_matching_words(num_a[(m.to_i)..9])
+            unless comp_words.empty?
+              n.each do|f_w|
+                comp_words.map{|c| final_array.push([f_w,c])}
               end
-            elsif remaining_length == 7
-              [3,4].each do |y|
-                s_comp_words = return_matching_words(num_a[3..(2 + y)])
+            end
+            if detailed == true
+              if remaining_length == 6
+                s_comp_words = return_matching_words(num_a[4..6])
                 unless s_comp_words.empty?
-                  t_comp_words = return_matching_words(num_a[(2+y+1)..9])
+                  t_comp_words = return_matching_words(num_a[7..9])
                   unless t_comp_words.empty?
                     n.each do|f_w|
                       s_comp_words.each do|s|
                         t_comp_words.map{|t| final_array.push([f_w,s,t]) }
+                      end
+                    end
+                  end
+                end
+              elsif remaining_length == 7
+                [3,4].each do |y|
+                  s_comp_words = return_matching_words(num_a[3..(2 + y)])
+                  unless s_comp_words.empty?
+                    t_comp_words = return_matching_words(num_a[(2+y+1)..9])
+                    unless t_comp_words.empty?
+                      n.each do|f_w|
+                        s_comp_words.each do|s|
+                          t_comp_words.map{|t| final_array.push([f_w,s,t]) }
+                        end
                       end
                     end
                   end
@@ -63,17 +65,19 @@ class NumToWords
           end
         end
       end
-    end
-    unless matching_words["10"].empty?
-      final_array.each do|f|
-        if f.class.name == "Array"
-          final_array.delete(f) if matching_words["10"].include?(f.join(""))
+      unless matching_words["10"].empty?
+        final_array.each do|f|
+          if f.class.name == "Array"
+            final_array.delete(f) if matching_words["10"].include?(f.join(""))
+          end
         end
+        final_array = final_array.uniq.sort
+        matching_words["10"].sort.map{|m| final_array.push(m)}
       end
-      final_array = final_array.uniq.sort
-      matching_words["10"].sort.map{|m| final_array.push(m)}
+      return final_array
+    else
+      return "The input contains 0 or 1. So it is beyond the scope."
     end
-    return final_array
 	end
 
   def return_matching_words(num_array)
