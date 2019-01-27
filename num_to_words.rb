@@ -49,7 +49,7 @@ class NumToWords
               [3,4].each do |y|
                 s_comp_words = return_matching_words(num_a[3..(2 + y)])
                 unless s_comp_words.empty?
-                  t_comp_words = return_matching_words(num_a[(2+y)..9])
+                  t_comp_words = return_matching_words(num_a[(2+y+1)..9])
                   unless t_comp_words.empty?
                     n.each do|f_w|
                       s_comp_words.each do|s|
@@ -61,8 +61,6 @@ class NumToWords
               end
             end
           end
-        else
-          n.map{|w_m| final_array << w_m}
         end
       end
     end
@@ -72,6 +70,8 @@ class NumToWords
           final_array.delete(f) if matching_words["10"].include?(f.join(""))
         end
       end
+      final_array = final_array.sort
+      matching_words["10"].sort.map{|m| final_array.push(m)}
     end
     return final_array
 	end
@@ -95,5 +95,7 @@ class NumToWords
   end
 
 end
+
+
 
 
